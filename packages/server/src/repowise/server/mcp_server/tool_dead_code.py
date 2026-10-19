@@ -355,7 +355,7 @@ async def get_dead_code(
 
     # How much of the call graph these findings rest on, per language. A
     # reachability finding is only as strong as the edges that reached.
-    summary["call_resolution_basis"] = call_resolution_bases
+    summary["call_resolution_basis"] = call_resolution_basis
 
     result["_meta"] = _build_meta(repository=repository)
     _attach_preview(result)
