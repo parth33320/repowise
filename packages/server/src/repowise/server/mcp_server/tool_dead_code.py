@@ -296,6 +296,10 @@ async def get_dead_code(
         # over the gated rows too so a lookup by id is enriched the same way.
         git_meta_map = await _load_git_meta_map(session, repository.id, every_shown_kind)
 
+        # Execute call_resolution_bases while session is still active
+        call_resolution_basis = await call_resolution_bases(
+            session, repository.id, cache_key=index_state_key(repository)
+        )
     reference_repository = ctx.alias or repository.name
     if finding_id:
         match = next(
@@ -351,9 +355,7 @@ async def get_dead_code(
 
     # How much of the call graph these findings rest on, per language. A
     # reachability finding is only as strong as the edges that reached.
-    summary["call_resolution_basis"] = await call_resolution_bases(
-        session, repository.id, cache_key=index_state_key(repository)
-    )
+    summary["call_resolution_basis"] = call_resolution_bases
 
     result["_meta"] = _build_meta(repository=repository)
     _attach_preview(result)
